@@ -1,0 +1,72 @@
+{
+  "turing": {
+    "file": "turing.jpg",
+    "title": "File:Alan Turing by Stephen Kettle 2007.jpg",
+    "author": "DeFacto",
+    "license": "CC BY-SA 4.0",
+    "page": "https://commons.wikimedia.org/wiki/File:Alan_Turing_by_Stephen_Kettle_2007.jpg"
+  },
+  "mccarthy": {
+    "file": "mccarthy.jpg",
+    "title": "File:John McCarthy (computer scientist) Stanford 2006 (272020300).jpg",
+    "author": "null0 from Singapore, Singapore",
+    "license": "CC BY 2.0",
+    "page": "https://commons.wikimedia.org/wiki/File:John_McCarthy_(computer_scientist)_Stanford_2006_(272020300).jpg"
+  },
+  "perceptron": {
+    "file": "perceptron.jpg",
+    "title": "File:330-PSA-80-60 (USN 710739) (20897323365).jpg",
+    "author": "National Museum of the U.S. Navy",
+    "license": "Public domain",
+    "page": "https://commons.wikimedia.org/wiki/File:330-PSA-80-60_(USN_710739)_(20897323365).jpg"
+  },
+  "eliza": {
+    "file": "eliza.png",
+    "title": "File:ELIZA conversation.png",
+    "author": "Unknown authorUnknown author",
+    "license": "Public domain",
+    "page": "https://commons.wikimedia.org/wiki/File:ELIZA_conversation.png"
+  },
+  "deepblue": {
+    "file": "deepblue.jpg",
+    "title": "File:Say hello to Deep Blue (2586059148).jpg",
+    "author": "Erik Pitti from San Diego, CA, USA",
+    "license": "CC BY 2.0",
+    "page": "https://commons.wikimedia.org/wiki/File:Say_hello_to_Deep_Blue_(2586059148).jpg"
+  },
+  "hinton": {
+    "file": "hinton.jpg",
+    "title": "File:Geoffrey Hinton at 2024 Nobel Prize Conference 7.jpg",
+    "author": "Jennifer 8. Lee",
+    "license": "CC BY-SA 4.0",
+    "page": "https://commons.wikimedia.org/wiki/File:Geoffrey_Hinton_at_2024_Nobel_Prize_Conference_7.jpg"
+  },
+  "alphago": {
+    "file": "alphago.jpg",
+    "title": "File:Lee-sedol-alphago-divine-move.jpg",
+    "author": "Axd",
+    "license": "CC BY-SA 4.0",
+    "page": "https://commons.wikimedia.org/wiki/File:Lee-sedol-alphago-divine-move.jpg"
+  },
+  "chatgpt": {
+    "file": "chatgpt.png",
+    "title": "File:GPT-5 Reasoning UI.png",
+    "author": "StereoFolic",
+    "license": "CC BY-SA 4.0",
+    "page": "https://commons.wikimedia.org/wiki/File:GPT-5_Reasoning_UI.png"
+  },
+  "robot": {
+    "file": "robot.jpg",
+    "title": "File:Japan-Mobility-Show-2025-RuinDig 0542.jpg",
+    "author": "RuinDig/Yuki Uchida",
+    "license": "CC BY 4.0",
+    "page": "https://commons.wikimedia.org/wiki/File:Japan-Mobility-Show-2025-RuinDig_0542.jpg"
+  },
+  "frontier": {
+    "file": "frontier.jpg",
+    "title": "File:Frontier supercomputer (10).jpg",
+    "author": "Oak Ridge National Laboratory",
+    "license": "CC BY 2.0",
+    "page": "https://commons.wikimedia.org/wiki/File:Frontier_supercomputer_(10).jpg"
+  }
+}

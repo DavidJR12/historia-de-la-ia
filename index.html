@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<script>document.documentElement.classList.add("js");</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Historia de la IA · de Turing a 2026</title>
+<meta name="description" content="Setenta años de inteligencia artificial: de la pregunta de Turing a los modelos frontera de 2026, y lo que viene después.">
+<style>
+  :root{
+    --bg:#07090f;
+    --panel:#0d1220;
+    --panel-2:#111830;
+    --ink:#eef2ff;
+    --muted:#93a0c0;
+    --dim:#5d6a8a;
+    --blue:#6ea8fe;
+    --violet:#b388ff;
+    --cyan:#4dd4c0;
+    --line:rgba(110,168,254,.16);
+    --max:1140px;
+  }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+    line-height:1.65;
+    overflow-x:hidden;
+  }
+
+  /* fondo: rejilla de puntos + halos */
+  body::before{
+    content:"";
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background-image:radial-gradient(rgba(110,168,254,.14) 1px, transparent 1px);
+    background-size:34px 34px;
+    mask-image:radial-gradient(circle at 50% 25%, #000 0%, transparent 78%);
+    -webkit-mask-image:radial-gradient(circle at 50% 25%, #000 0%, transparent 78%);
+  }
+
+  .wrap{
+    position:relative; z-index:1;
+    max-width:var(--max); margin:0 auto; padding:0 28px;
+  }
+
+  /* progreso */
+  .progress{ position:fixed; top:0; left:0; right:0; height:3px; z-index:60; background:rgba(255,255,255,.05); }
+  .progress i{
+    display:block; height:100%; width:0%;
+    background:linear-gradient(90deg, var(--cyan), var(--blue), var(--violet));
+  }
+
+  /* nav */
+  nav{
+    position:fixed; top:0; left:0; right:0; z-index:50;
+    display:flex; justify-content:flex-end; align-items:center; gap:4px;
+    padding:14px 24px;
+    background:linear-gradient(to bottom, rgba(7,9,15,.94), rgba(7,9,15,0));
+    backdrop-filter:blur(8px);
+  }
+  nav a{
+    color:var(--muted); text-decoration:none; font-size:12.5px;
+    letter-spacing:.08em; text-transform:uppercase; font-weight:600;
+    padding:7px 10px; border-radius:7px;
+    transition:color .25s, background .25s;
+  }
+  nav a:hover{ color:var(--ink); background:rgba(110,168,254,.1); }
+
+  /* hero */
+  .hero{
+    position:relative; z-index:1;
+    min-height:100vh; display:flex; align-items:center;
+    padding:120px 0 80px;
+  }
+  .hero-grid{
+    display:grid; grid-template-columns:1.15fr .85fr; gap:56px; align-items:center;
+  }
+  .kicker{
+    font-size:12.5px; letter-spacing:.32em; text-transform:uppercase;
+    color:var(--cyan); font-weight:700; margin:0 0 20px;
+  }
+  .hero h1{
+    margin:0; font-weight:800; letter-spacing:-.045em;
+    font-size:clamp(44px, 6.6vw, 84px); line-height:.98;
+  }
+  .hero h1 em{
+    font-style:normal;
+    background:linear-gradient(100deg, var(--cyan), var(--blue) 45%, var(--violet));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .hero .lead{
+    margin:26px 0 0; font-size:clamp(17px, 2vw, 22px);
+    color:#c3cde6; font-weight:300; max-width:620px;
+  }
+  .pills{ display:flex; flex-wrap:wrap; gap:9px; margin-top:34px; }
+  .pills span{
+    border:1px solid var(--line); border-radius:999px;
+    padding:7px 16px; font-size:13px; color:var(--muted);
+    background:rgba(255,255,255,.02);
+  }
+  .pills b{ color:var(--ink); font-weight:600; }
+
+  .hero-shot{
+    position:relative; border-radius:18px; overflow:hidden;
+    border:1px solid var(--line);
+    box-shadow:0 30px 80px rgba(0,0,0,.5);
+  }
+  .hero-shot img{
+    display:block; width:100%; height:440px; object-fit:cover;
+    filter:saturate(.9) contrast(1.05);
+  }
+  .hero-shot figcaption{
+    position:absolute; left:0; right:0; bottom:0;
+    padding:26px 18px 14px; font-size:12px; color:#c9d4ea;
+    background:linear-gradient(to top, rgba(7,9,15,.92), transparent);
+  }
+
+  /* secciones */
+  section{ position:relative; z-index:1; padding:84px 0; }
+
+  .eyebrow{
+    font-size:12px; letter-spacing:.3em; text-transform:uppercase;
+    color:var(--violet); font-weight:700; margin:0 0 12px;
+  }
+  h2.section-title{
+    margin:0 0 16px; font-size:clamp(30px, 4.4vw, 50px);
+    line-height:1.1; letter-spacing:-.03em; font-weight:800;
+  }
+  .section-sub{ margin:0 0 44px; color:var(--muted); font-size:17.5px; max-width:700px; }
+
+  /* tarjetas de datos */
+  .stats{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:24px; }
+  .stat{
+    border:1px solid var(--line); border-radius:16px; padding:26px 22px;
+    background:rgba(255,255,255,.022);
+    transition:transform .45s cubic-bezier(.2,.8,.2,1), border-color .45s, background .45s;
+  }
+  .stat:hover{ transform:translateY(-5px); border-color:rgba(110,168,254,.45); background:rgba(110,168,254,.06); }
+  .stat .num{
+    display:block; font-size:clamp(32px,3.8vw,46px); font-weight:800;
+    letter-spacing:-.03em; color:var(--blue); line-height:1; font-variant-numeric:tabular-nums;
+  }
+  .stat .lbl{ display:block; margin-top:12px; font-size:14px; color:var(--muted); }
+
+  /* cronología */
+  .era{ display:flex; align-items:baseline; gap:16px; margin:68px 0 26px; }
+  .era:first-of-type{ margin-top:0; }
+  .era span{ font-size:clamp(26px,3.6vw,40px); font-weight:800; letter-spacing:-.03em; color:var(--blue); }
+  .era hr{ flex:1; border:none; height:1px; background:linear-gradient(90deg, var(--line), transparent); }
+
+  .tl{ position:relative; padding-left:32px; }
+  .tl::before{
+    content:""; position:absolute; left:6px; top:8px; bottom:8px; width:2px;
+    background:rgba(110,168,254,.13); border-radius:2px;
+  }
+  .tl-progress{
+    position:absolute; left:6px; top:8px; width:2px; height:0;
+    background:linear-gradient(to bottom, var(--cyan), var(--violet));
+    border-radius:2px;
+  }
+  .item{ position:relative; padding-bottom:32px; }
+  .item:last-child{ padding-bottom:0; }
+  .item::before{
+    content:""; position:absolute; left:-31px; top:9px;
+    width:14px; height:14px; border-radius:50%;
+    background:var(--bg); border:2px solid rgba(110,168,254,.45);
+    transition:background .4s, border-color .4s, box-shadow .4s;
+  }
+  .item.in::before{
+    background:var(--blue); border-color:var(--blue);
+    box-shadow:0 0 0 5px rgba(110,168,254,.12);
+  }
+  .item time{
+    display:block; font-size:12.5px; font-weight:700; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--cyan); margin-bottom:5px;
+  }
+  .item h3{ margin:0 0 6px; font-size:21px; font-weight:700; letter-spacing:-.01em; }
+  .item p{ margin:0; color:#b3bfd8; font-size:16px; max-width:760px; }
+  .item p b{ color:#fff; font-weight:600; }
+
+  /* bloques con imagen */
+  .split{
+    display:grid; grid-template-columns:1fr 1fr; gap:44px; align-items:center;
+    padding:42px 0;
+  }
+  .split.rev .shot{ order:-1; }
+  .split h3{ margin:0 0 8px; font-size:clamp(24px,2.8vw,32px); letter-spacing:-.02em; line-height:1.2; }
+  .split .year{
+    font-size:13px; font-weight:700; letter-spacing:.14em; color:var(--cyan);
+    text-transform:uppercase; display:block; margin-bottom:10px;
+  }
+  .split p{ color:#b3bfd8; font-size:16.5px; margin:0 0 14px; }
+  .split p:last-child{ margin-bottom:0; }
+  .split p b{ color:#fff; font-weight:600; }
+
+  .shot{
+    margin:0; border-radius:16px; overflow:hidden;
+    border:1px solid var(--line); background:var(--panel);
+    box-shadow:0 24px 60px rgba(0,0,0,.45);
+  }
+  .shot img{
+    display:block; width:100%; height:330px; object-fit:cover;
+    transition:transform .8s cubic-bezier(.2,.8,.2,1), filter .8s;
+    filter:saturate(.92);
+  }
+  .shot.contain img{ object-fit:contain; background:#080b14; }
+  .shot.kb img{ object-position:50% 35%; }
+  .shot:hover img{ transform:scale(1.04); filter:saturate(1.05); }
+  .shot figcaption{
+    padding:13px 16px; font-size:12.5px; color:var(--dim);
+    border-top:1px solid rgba(255,255,255,.05); line-height:1.5;
+  }
+  .shot figcaption b{ color:var(--muted); font-weight:600; }
+
+  /* inviernos */
+  .winters{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  .winter{
+    border:1px solid rgba(179,136,255,.22); border-radius:16px;
+    padding:30px 26px; background:linear-gradient(160deg, rgba(179,136,255,.07), transparent 70%);
+  }
+  .winter h3{ margin:0 0 6px; font-size:32px; font-weight:800; letter-spacing:-.03em; color:var(--violet); }
+  .winter p{ margin:0; color:#b3bfd8; font-size:15.5px; }
+
+  /* cita */
+  .quote{
+    border-left:3px solid var(--cyan); padding:6px 0 6px 26px; margin:40px 0 0;
+    font-size:clamp(20px,2.4vw,27px); font-weight:300; line-height:1.5; color:#dbe4f7;
+  }
+  .quote cite{
+    display:block; margin-top:14px; font-size:14px; font-style:normal;
+    color:var(--dim); letter-spacing:.04em;
+  }
+
+  /* tarjetas */
+  .cards{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .card{
+    border:1px solid var(--line); border-radius:16px; padding:26px 22px;
+    background:rgba(255,255,255,.022);
+    transition:transform .5s cubic-bezier(.2,.8,.2,1), border-color .5s;
+  }
+  .card:hover{ transform:translateY(-6px); border-color:rgba(110,168,254,.45); }
+  .card .tag{
+    font-size:11.5px; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--cyan); font-weight:700; margin:0 0 10px;
+  }
+  .card h3{ margin:0 0 8px; font-size:21px; letter-spacing:-.01em; }
+  .card p{ margin:0; color:#b3bfd8; font-size:15.5px; }
+
+  .future .card{ border-color:rgba(179,136,255,.2); }
+  .future .card .tag{ color:var(--violet); }
+
+  .disclaimer{
+    margin-top:26px; font-size:14px; color:var(--dim);
+    border:1px dashed rgba(179,136,255,.28); border-radius:12px;
+    padding:16px 20px;
+  }
+
+  /* cierre */
+  .closing{ text-align:center; }
+  .closing blockquote{
+    margin:0 auto 40px; max-width:900px;
+    font-size:clamp(22px,3.2vw,36px); font-weight:300; line-height:1.45; letter-spacing:-.015em;
+  }
+  .closing blockquote b{ color:var(--blue); font-weight:600; }
+
+  /* créditos */
+  .credits{ font-size:13px; color:var(--dim); line-height:1.9; }
+  .credits li{ margin-bottom:4px; }
+  .credits a{ color:var(--muted); text-decoration:none; border-bottom:1px solid rgba(110,168,254,.3); }
+  .credits a:hover{ color:var(--blue); }
+
+  footer{
+    position:relative; z-index:1; border-top:1px solid rgba(255,255,255,.06);
+    padding:32px 0 46px; color:var(--dim); font-size:13px;
+  }
+  footer .wrap{ display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap; }
+
+  /* animaciones */
+  .js .reveal{
+    opacity:0; transform:translateY(28px);
+    transition:opacity .75s cubic-bezier(.2,.8,.2,1), transform .75s cubic-bezier(.2,.8,.2,1);
+    will-change:opacity, transform;
+  }
+  .js .reveal.in{ opacity:1; transform:none; }
+  .no-anim .reveal{ opacity:1 !important; transform:none !important; }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    .reveal{ opacity:1 !important; transform:none !important; transition:none !important; }
+    .shot:hover img{ transform:none; }
+    *{ transition-duration:.01ms !important; animation-duration:.01ms !important; }
+  }
+
+  /* responsive */
+  @media (max-width: 920px){
+    .hero-grid{ grid-template-columns:1fr; gap:36px; }
+    .hero-shot img{ height:300px; }
+    .stats, .cards{ grid-template-columns:1fr 1fr; }
+    .split{ grid-template-columns:1fr; gap:26px; padding:40px 0; }
+    .split.rev .shot{ order:0; }
+    .shot img{ height:260px; }
+    nav{ justify-content:center; padding:12px; flex-wrap:wrap; }
+    nav a{ font-size:11px; padding:6px 8px; }
+  }
+  @media (max-width: 560px){
+    section{ padding:72px 0; }
+    .stats, .cards, .winters{ grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress"><i id="bar"></i></div>
+
+<nav>
+  <a href="#origen">Origen</a>
+  <a href="#inviernos">Inviernos</a>
+  <a href="#explosion">Explosión</a>
+  <a href="#hoy">Hoy</a>
+  <a href="#futuro">Futuro</a>
+</nav>
+
+<header class="hero" id="inicio">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <p class="kicker">Historia de la inteligencia artificial</p>
+        <h1>De una pregunta<br>a <em>la frontera</em></h1>
+        <p class="lead">Setenta años intentando que una máquina aprenda. Con dos inviernos,
+        tres revoluciones y una carrera que ahora se mide en semanas.</p>
+        <div class="pills">
+          <span><b>1950</b> · Turing</span>
+          <span><b>1956</b> · Dartmouth</span>
+          <span><b>2012</b> · aprendizaje profundo</span>
+          <span><b>2026</b> · modelos frontera</span>
+        </div>
+      </div>
+      <figure class="hero-shot reveal">
+        <img src="img/turing.jpg" alt="Escultura de Alan Turing en Bletchley Park, tallada en pizarra">
+        <figcaption>Alan Turing, esculpido en pizarra por Stephen Kettle (Bletchley Park).</figcaption>
+      </figure>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- DEFINICIÓN -->
+  <section id="origen">
+    <div class="wrap">
+      <p class="eyebrow reveal">Punto de partida</p>
+      <h2 class="section-title reveal">Una pregunta de 1950</h2>
+      <p class="section-sub reveal">Alan Turing no preguntó si las máquinas podían pensar.
+      Preguntó si podíamos distinguirlas de un humano en una conversación. Setenta y seis años
+      después, seguimos discutiendo la respuesta.</p>
+
+      <div class="stats">
+        <div class="stat reveal">
+          <span class="num" data-count="76">0</span>
+          <span class="lbl">años desde el artículo de Turing, «Computing Machinery and Intelligence» (1950).</span>
+        </div>
+        <div class="stat reveal">
+          <span class="num" data-count="70">0</span>
+          <span class="lbl">años desde la conferencia de Dartmouth, donde nació el término «inteligencia artificial».</span>
+        </div>
+        <div class="stat reveal">
+          <span class="num" data-count="2" data-suffix=" meses">0</span>
+          <span class="lbl">tardó ChatGPT en llegar a 100 millones de usuarios, a principios de 2023.</span>
+        </div>
+      </div>
+
+      <p class="quote reveal">«Podemos ver bastante lejos hacia el futuro, pero no lo suficiente
+      como para saber qué pasará mañana.»
+        <cite>Alan Turing, 1950</cite>
+      </p>
+    </div>
+  </section>
+
+  <!-- CRONOLOGÍA -->
+  <section>
+    <div class="wrap">
+      <p class="eyebrow reveal">Cronología</p>
+      <h2 class="section-title reveal">Los cimientos (1950–1974)</h2>
+      <p class="section-sub reveal">La inteligencia artificial nace como disciplina, promete
+      demasiado pronto y descubre su primer límite.</p>
+
+      <div class="split reveal">
+        <div>
+          <span class="year">1956 · Dartmouth College</span>
+          <h3>Nace el nombre</h3>
+          <p>Un grupo de investigadores —entre ellos <b>John McCarthy</b>, Marvin Minsky,
+          Claude Shannon y Nathaniel Rochester— se encierra un verano para estudiar «cómo hacer
+          que las máquinas usen el lenguaje, formen abstracciones y resuelvan problemas».</p>
+          <p>McCarthy acuña el término <b>inteligencia artificial</b>. La disciplina queda
+          fundada con una ambición enorme y, sobre el papel, muy poco tiempo.</p>
+        </div>
+        <figure class="shot">
+          <img src="img/mccarthy.jpg" alt="Retrato de John McCarthy en Stanford, 2006" loading="lazy">
+          <figcaption><b>John McCarthy</b>, creador del término y de Lisp. Foto: null0, CC BY 2.0, vía Wikimedia Commons.</figcaption>
+        </figure>
+      </div>
+
+      <div class="split rev reveal">
+        <div>
+          <span class="year">1958 · Cornell</span>
+          <h3>El perceptrón: aprender de los datos</h3>
+          <p>Frank Rosenblatt construye el <b>Mark I Perceptron</b>, financiado por la Marina
+          de EE. UU. No se le programan reglas: ajusta sus pesos a partir de ejemplos.</p>
+          <p>Es la primera semilla del aprendizaje automático. También el origen de una
+          expectativa desmedida: la prensa llegó a decir que pronto sería capaz de
+          «caminar, hablar, ver y ser consciente de su existencia».</p>
+        </div>
+        <figure class="shot">
+          <img src="img/perceptron.jpg" alt="Fotografía del Mark I Perceptron con un técnico ajustándolo" loading="lazy">
+          <figcaption><b>Mark I Perceptron</b> (1958). Foto: Museo Nacional de la Armada de EE. UU., dominio público.</figcaption>
+        </figure>
+      </div>
+
+      <div class="split reveal">
+        <div>
+          <span class="year">1966 · MIT</span>
+          <h3>ELIZA, el primer chatbot</h3>
+          <p>Joseph Weizenbaum escribe <b>ELIZA</b>, un programa que imita a un psicoterapeuta
+          devolviendo las frases del usuario en forma de pregunta.</p>
+          <p>No entiende nada. Y aun así, mucha gente empezó a contarle cosas íntimas.
+          Weizenbaum se asustó con su propia criatura: fue de los primeros en advertir
+          del riesgo de que confundamos conversación con comprensión.</p>
+        </div>
+        <figure class="shot">
+          <img src="img/eliza.png" alt="Transcripción de una conversación con ELIZA en una terminal" loading="lazy">
+          <figcaption><b>ELIZA</b> en funcionamiento, con una conversación real. Dominio público.</figcaption>
+        </figure>
+      </div>
+
+      <div class="tl">
+        <div class="tl-progress"></div>
+
+        <article class="item reveal">
+          <time>1950</time>
+          <h3>El test de Turing</h3>
+          <p>Turing propone el «juego de imitación»: si no puedes distinguir a la máquina de una persona
+          por escrito, ¿qué más da cómo lo haga?</p>
+        </article>
+
+        <article class="item reveal">
+          <time>1969</time>
+          <h3>«Perceptrons», el libro que enfrió el campo</h3>
+          <p>Minsky y Papert demuestran los límites matemáticos del perceptrón simple.
+          El golpe es más político que técnico, pero la financiación empieza a cerrarse.</p>
+        </article>
+
+        <article class="item reveal">
+          <time>1973</time>
+          <h3>El informe Lighthill</h3>
+          <p>El Reino Unido concluye que la IA no ha cumplido sus promesas y retira el apoyo.
+          DARPA hace lo mismo en EE. UU. Es el <b>primer invierno</b>.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- INVIERNOS -->
+  <section id="inviernos">
+    <div class="wrap">
+      <p class="eyebrow reveal">Los años difíciles</p>
+      <h2 class="section-title reveal">Dos inviernos y una semilla</h2>
+      <p class="section-sub reveal">Cuando las promesas superan a los resultados, el dinero
+      desaparece. Pasó dos veces. En medio, alguien encontró la pieza que faltaba.</p>
+
+      <div class="winters">
+        <div class="winter reveal">
+          <h3>1980–1987</h3>
+          <p><b style="color:#fff">La era de los sistemas expertos.</b> XCON, en Digital,
+          configura pedidos mejor que un humano. Japón lanza su proyecto de quinta generación.
+          Parece que la IA por fin vende… hasta que el mantenimiento de miles de reglas
+          se vuelve inmanejable y el mercado de las máquinas Lisp se hunde en 1987.</p>
+        </div>
+        <div class="winter reveal">
+          <h3>1986</h3>
+          <p><b style="color:#fff">Backpropagation.</b> Rumelhart, Hinton y Williams popularizan
+          el algoritmo que permite entrenar redes con varias capas ajustando los pesos hacia atrás.
+          La idea es de los años 70, pero ahora hay datos y ordenadores. Tardará 26 años en explotar.</p>
+        </div>
+      </div>
+
+      <p class="quote reveal">Durante los años noventa, mencionar «redes neuronales»
+      en una solicitud de financiación era una forma rápida de que te la rechazaran.
+        <cite>La técnica que acabaría ganando ya existía desde 1986.</cite>
+      </p>
+    </div>
+  </section>
+
+  <!-- VICTORIAS -->
+  <section>
+    <div class="wrap">
+      <p class="eyebrow reveal">1997–2011</p>
+      <h2 class="section-title reveal">Ganar al humano</h2>
+      <p class="section-sub reveal">La IA vuelve por donde el público la entiende: venciendo
+      a campeones del mundo en juegos de mesa y concursos de preguntas.</p>
+
+      <div class="split reveal">
+        <div>
+          <span class="year">Mayo de 1997</span>
+          <h3>Deep Blue contra Kaspárov</h3>
+          <p>El ajedrez cae primero: <b>IBM Deep Blue</b> gana el duelo 3,5 a 2,5 al campeón
+          mundial Gari Kaspárov. No «piensa»: evalúa unos 200 millones de posiciones por segundo.</p>
+          <p>Fue fuerza bruta, no aprendizaje. Pero el titular dio la vuelta al mundo y
+          cambió la conversación pública sobre las máquinas.</p>
+        </div>
+        <figure class="shot kb">
+          <img src="img/deepblue.jpg" alt="Armarios IBM RS/6000 SP de Deep Blue expuestos en el Computer History Museum" loading="lazy">
+          <figcaption><b>Deep Blue</b>: los dos armarios IBM RS/6000 SP, en el Computer History Museum. Foto: Anton Chiang, CC BY 2.0.</figcaption>
+        </figure>
+      </div>
+
+      <div class="split rev reveal">
+        <div>
+          <span class="year">Marzo de 2016</span>
+          <h3>AlphaGo y la jugada 37</h3>
+          <p>El go se resistía a la fuerza bruta: demasiadas posibilidades. <b>AlphaGo</b>,
+          de DeepMind, combina redes neuronales con búsqueda en árbol y vence a Lee Sedol 4–1.</p>
+          <p>En la segunda partida juega el movimiento 37, que los comentaristas tomaron por
+          un error. Era brillante. Ahí quedó claro que el aprendizaje profundo ya no solo
+          reconocía imágenes: empezaba a <b>intuir</b>.</p>
+        </div>
+        <figure class="shot">
+          <img src="img/alphago.jpg" alt="Tablero de go con la posición de la partida entre Lee Sedol y AlphaGo" loading="lazy">
+          <figcaption>La <b>jugada 37</b> de AlphaGo en la partida 2. Imagen: Axd, CC BY-SA 4.0.</figcaption>
+        </figure>
+      </div>
+
+      <div class="split reveal">
+        <div>
+          <span class="year">2017 · Google</span>
+          <h3>El transformer lo cambia todo</h3>
+          <p>El artículo <b>«Attention Is All You Need»</b> propone una arquitectura que procesa
+          toda la secuencia a la vez, en lugar de palabra por palabra. Es más rápida,
+          escala mejor y se entrena en paralelo.</p>
+          <p>Todos los grandes modelos de lenguaje que usas hoy —y esta misma web— descienden
+          de esas ocho páginas.</p>
+        </div>
+        <div class="cards" style="grid-template-columns:1fr">
+          <div class="card">
+            <p class="tag">2018 → 2020</p>
+            <h3>De BERT a GPT-3</h3>
+            <p>La escala se convierte en la estrategia: más parámetros, más datos, más cómputo.
+            GPT-3 llega a 175.000 millones de parámetros y empieza a hacer cosas para las que
+            nadie lo había entrenado explícitamente.</p>
+          </div>
+          <div class="card">
+            <p class="tag">La clave</p>
+            <h3>Predecir la siguiente palabra</h3>
+            <p>No hay reglas de gramática ni base de conocimiento. Solo un objetivo estadístico
+            humilde que, a gran escala, arrastra capacidades que nadie programó.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPLOSIÓN -->
+  <section id="explosion">
+    <div class="wrap">
+      <p class="eyebrow reveal">2022–2024</p>
+      <h2 class="section-title reveal">La explosión</h2>
+      <p class="section-sub reveal">En tres años, la IA pasa de laboratorio a producto de consumo
+      masivo, y de responder texto a razonar antes de responder.</p>
+
+      <div class="split reveal">
+        <div>
+          <span class="year">30 de noviembre de 2022</span>
+          <h3>ChatGPT</h3>
+          <p>OpenAI publica una «demo de investigación» construida sobre GPT-3.5. En dos meses
+          supera los <b>100 millones de usuarios</b>: el producto de consumo que más rápido creció
+          hasta entonces.</p>
+          <p>El mundo descubre que se puede conversar con un modelo. También descubre, muy rápido,
+          que se lo inventa con total seguridad.</p>
+        </div>
+        <figure class="shot contain">
+          <img src="img/chatgpt.png" alt="Interfaz de ChatGPT con un problema de cuadrícula y el aviso de que está pensando" loading="lazy">
+          <figcaption>La interfaz de ChatGPT en 2025, ya con <b>razonamiento visible</b> antes de responder. Imagen: StereoFolic, CC BY-SA 4.0.</figcaption>
+        </figure>
+      </div>
+
+      <div class="split rev reveal">
+        <div>
+          <span class="year">2023–2024</span>
+          <h3>Multimodal, abierto y con premio Nobel</h3>
+          <p>Los modelos dejan de ser solo texto: ven imágenes, generan vídeo, escriben y ejecutan
+          código, navegan. Los <b>pesos abiertos</b> (Llama, Mistral, Qwen, DeepSeek) acercan la
+          frontera a cualquiera con una GPU.</p>
+          <p>En 2024 llega el primer modelo que «piensa» antes de contestar —<b>o1</b>, en septiembre—
+          y en octubre el Nobel de Física reconoce a <b>Hopfield y Hinton</b> las bases de las redes neuronales.</p>
+        </div>
+        <figure class="shot">
+          <img src="img/hinton.jpg" alt="Geoffrey Hinton en la conferencia del Premio Nobel 2024" loading="lazy">
+          <figcaption><b>Geoffrey Hinton</b>, Nobel de Física 2024, en la conferencia previa a la entrega. Foto: Jennifer 8. Lee, CC BY-SA 4.0.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2025-2026 -->
+  <section>
+    <div class="wrap">
+      <p class="eyebrow reveal">2025–2026</p>
+      <h2 class="section-title reveal">La era de los agentes</h2>
+      <p class="section-sub reveal">Ya no se trata de escribir mejor: se trata de hacer.
+      Los modelos razonan, usan herramientas, abren pestañas, ejecutan código y trabajan
+      durante horas sin supervisión.</p>
+
+      <div class="split reveal">
+        <div>
+          <span class="year">2025</span>
+          <h3>Razonar, y luego actuar</h3>
+          <p>Los modelos de razonamiento se generalizan y llegan los <b>agentes</b>:
+          asistentes que planifican, consultan fuentes y ejecutan tareas de varios pasos
+          (como este mismo entorno, que escribe archivos y los verifica).</p>
+          <p>Los modelos abiertos, además, dejan de ir por detrás: <b>DeepSeek R1</b> demuestra en
+          enero que se puede competir con mucho menos presupuesto.</p>
+        </div>
+        <div class="cards" style="grid-template-columns:1fr">
+          <div class="card">
+            <p class="tag">Agentes</p>
+            <h3>Software que trabaja solo</h3>
+            <p>Editar un repositorio, revisar un PDF, rellenar un formulario, investigar durante
+            media hora y devolver un informe con fuentes.</p>
+          </div>
+          <div class="card">
+            <p class="tag">Coste</p>
+            <h3>Más barato cada año</h3>
+            <p>El precio de una consulta equivalente ha caído de forma brutal en tres años.
+            Eso es lo que ha permitido que la IA llegue a todo el mundo.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="era reveal"><span>2026</span><hr></div>
+      <div class="tl">
+        <div class="tl-progress"></div>
+
+        <article class="item reveal">
+          <time>24 de julio de 2026</time>
+          <h3>Claude Opus 5</h3>
+          <p>Anthropic sube un peldaño en la gama Opus: mejores agentes, más código y más criterio.</p>
+        </article>
+
+        <article class="item reveal">
+          <time>4 de septiembre de 2026</time>
+          <h3>GPT-6 Astra</h3>
+          <p>OpenAI presenta su modelo más capaz, orientado a uso de ordenador, ciberseguridad y trabajo profesional.</p>
+        </article>
+
+        <article class="item reveal">
+          <time>22 de septiembre de 2026</time>
+          <h3>GPT-6 Sol y Luna, y Claude Opus 5.5</h3>
+          <p>Dos modelos con equilibrios distintos de capacidad y coste, el mismo día que Anthropic
+          publica Opus 5.5. La cadencia ya es mensual, no anual.</p>
+        </article>
+
+        <article class="item reveal">
+          <time>7 de octubre de 2026</time>
+          <h3>GPT-6.1 Sol</h3>
+          <p>Una mejora que roza al modelo tope en programación agéntica y uso de ordenador,
+          a una fracción del precio. Doce días después, aquí seguimos.</p>
+        </article>
+      </div>
+
+      <div class="split reveal" style="margin-top:24px">
+        <div>
+          <span class="year">El sustrato</span>
+          <h3>Un coste que no se ve</h3>
+          <p>Todo esto depende de algo muy físico: fábricas llenas de GPU y enormes cantidades de
+          electricidad. El cuello de botella ha dejado de ser la idea y se ha vuelto
+          <b>el hardware</b>.</p>
+          <p>Los superordenadores que entrenan estos modelos consumen lo que una ciudad pequeña.
+          La IA se ha convertido también en un problema de energía.</p>
+        </div>
+        <figure class="shot">
+          <img src="img/frontier.jpg" alt="Centro de datos del superordenador Frontier en Oak Ridge" loading="lazy">
+          <figcaption><b>Frontier</b>, en Oak Ridge, uno de los superordenadores más rápidos del mundo. Foto: Oak Ridge National Laboratory, CC BY 2.0.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOY -->
+  <section id="hoy">
+    <div class="wrap">
+      <p class="eyebrow reveal">19 de octubre de 2026</p>
+      <h2 class="section-title reveal">Dónde estamos</h2>
+      <p class="section-sub reveal">Capacidad enorme, límites evidentes. Cuatro cosas que son
+      verdad a la vez.</p>
+
+      <div class="cards" style="margin-top:38px">
+        <div class="card reveal">
+          <p class="tag">Lo que funciona</p>
+          <h3>Agentes y código</h3>
+          <p>Donde más valor hay hoy: programar, revisar, documentar y automatizar tareas
+          repetitivas con un humano supervisando.</p>
+        </div>
+        <div class="card reveal">
+          <p class="tag">Lo que falla</p>
+          <h3>Alucinaciones</h3>
+          <p>Un modelo fluido y seguro de sí mismo sigue siendo capaz de inventarse una cita,
+          una ley o una función que no existe.</p>
+        </div>
+        <div class="card reveal">
+          <p class="tag">El debate</p>
+          <h3>Opacidad y derechos</h3>
+          <p>No sabemos del todo por qué un modelo responde lo que responde, ni cómo repartir
+          el valor del contenido con el que se entrenó.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FUTURO -->
+  <section id="futuro" class="future">
+    <div class="wrap">
+      <p class="eyebrow reveal">Lo que viene</p>
+      <h2 class="section-title reveal">Cuatro apuestas para la próxima década</h2>
+      <p class="section-sub reveal">Esto ya no es historia: es prospectiva. Tendencias con
+      fundamento, no predicciones con fecha.</p>
+
+      <div class="split reveal">
+        <div>
+          <span class="year">Cuerpo</span>
+          <h3>La IA sale de la pantalla</h3>
+          <p>Los robots humanoides han pasado de ferias a fábricas piloto. El cuello de botella
+          ya no es el modelo, sino la destreza física, la batería y el coste por unidad.</p>
+          <p>Si eso se resuelve, el trabajo repetitivo físico es el siguiente en la lista.</p>
+        </div>
+        <figure class="shot">
+          <img src="img/robot.jpg" alt="Robot humanoide y robot cuadrúpedo en una feria de tecnología" loading="lazy">
+          <figcaption>Robótica humanoide en el Japan Mobility Show 2025. Foto: RuinDig / Yuki Uchida, CC BY 4.0.</figcaption>
+        </figure>
+      </div>
+
+      <div class="cards" style="margin-top:34px">
+        <div class="card reveal">
+          <p class="tag">01 · Capacidad</p>
+          <h3>¿AGI?</h3>
+          <p>Los laboratorios discuten si estamos cerca. Lo seguro: los benchmarks se agotan
+          más rápido de lo que se crean nuevos, y eso ya pasó otras veces.</p>
+        </div>
+        <div class="card reveal">
+          <p class="tag">02 · Infraestructura</p>
+          <h3>Energía y chips</h3>
+          <p>El futuro de la IA se decide en centrales eléctricas y fundiciones. La ventaja
+          competitiva es cada vez más industrial.</p>
+        </div>
+        <div class="card reveal">
+          <p class="tag">03 · Regulación</p>
+          <h3>Reglas en marcha</h3>
+          <p>Europa ya legisla por riesgo; EE. UU. va por casos. La pregunta abierta es si la
+          norma llega antes o después que el siguiente modelo.</p>
+        </div>
+      </div>
+
+      <div class="cards" style="grid-template-columns:1fr; margin-top:16px">
+        <div class="card reveal">
+          <p class="tag">04 · Ciencia</p>
+          <h3>El uso menos visible y quizá el más importante</h3>
+          <p>Predicción de proteínas, diseño de fármacos y materiales, matemáticas asistidas,
+          diagnóstico por imagen. Ahí la IA no compite con las personas: amplía lo que
+          podemos investigar.</p>
+        </div>
+      </div>
+
+      <p class="disclaimer reveal">Aviso honesto: esta sección es prospectiva. Los hechos de las
+      secciones anteriores están fechados y contrastados; lo de aquí son tendencias y debate,
+      no anuncios.</p>
+    </div>
+  </section>
+
+  <!-- CIERRE -->
+  <section class="closing">
+    <div class="wrap">
+      <blockquote class="reveal">Turing preguntó si una máquina podía
+      <b>parecer humana</b>. La pregunta de 2026 es otra:
+      <b>¿qué queremos delegarle?</b></blockquote>
+      <p class="section-sub reveal" style="margin:0 auto;">
+        Setenta años después, la parte difícil ya no es la técnica. Es decidir para qué la usamos.
+      </p>
+    </div>
+  </section>
+
+  <!-- CRÉDITOS -->
+  <section>
+    <div class="wrap">
+      <p class="eyebrow reveal">Créditos y fuentes</p>
+      <h2 class="section-title reveal" style="font-size:clamp(24px,3vw,32px)">Fotos e información</h2>
+      <p class="section-sub reveal" style="margin-bottom:26px">Todas las imágenes son libres y están
+      descargadas en local. Enlaces a su ficha original:</p>
+      <ul class="credits reveal" id="creditos"></ul>
+      <p class="credits" style="margin-top:22px;">
+        Datos contrastados con: openai.com, anthropic.com, Wikipedia, Britannica,
+        Computer History Museum, DeepMind y los artículos originales citados.
+        Fecha de cierre: 19 / 10 / 2026.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Historia de la inteligencia artificial · 1950 – 2026</span>
+    <span>Hecho como pieza divulgativa · datos cerrados a 19 / 10 / 2026</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var items = Array.prototype.slice.call(document.querySelectorAll(".reveal"));
+  var counters = Array.prototype.slice.call(document.querySelectorAll("[data-count]"));
+
+  function renderFinal(el) {
+    var t = parseFloat(el.getAttribute("data-count"));
+    var suf = el.getAttribute("data-suffix") || "";
+    el.textContent = t.toLocaleString("es-ES") + suf;
+    el.dataset.done = "1";
+  }
+
+  function showAll() {
+    root.classList.add("no-anim");
+    items.forEach(function (el) { el.classList.add("in"); });
+    counters.forEach(renderFinal);
+  }
+
+  function inView(el, ratio) {
+    var r = el.getBoundingClientRect();
+    return r.top < (window.innerHeight || 0) * ratio && r.bottom > 0;
+  }
+
+  function setupReveals() {
+    items.forEach(function (el) {
+      var sibs = Array.prototype.slice.call(el.parentElement.children).filter(function (n) {
+        return n.classList && n.classList.contains("reveal");
+      });
+      el.style.transitionDelay = Math.min(sibs.indexOf(el), 4) * 70 + "ms";
+    });
+
+    if (!("IntersectionObserver" in window) || reduce) { showAll(); return; }
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+      });
+    }, { rootMargin: "0px 0px -12% 0px", threshold: 0.12 });
+    items.forEach(function (el) { io.observe(el); });
+
+    window.setTimeout(function () {
+      items.forEach(function (el) {
+        if (!el.classList.contains("in") && inView(el, 0.95)) el.classList.add("in");
+      });
+    }, 1200);
+  }
+
+  function setupCounters() {
+    var start = function (el) {
+      if (el.dataset.done) return;
+      el.dataset.done = "1";
+      var target = parseFloat(el.getAttribute("data-count"));
+      var suf = el.getAttribute("data-suffix") || "";
+      var dur = 1300, t0 = null;
+
+      if (reduce) { renderFinal(el); return; }
+
+      function step(ts) {
+        if (!t0) t0 = ts;
+        var p = Math.min((ts - t0) / dur, 1);
+        var v = Math.round(target * (1 - Math.pow(1 - p, 3)));
+        el.textContent = v.toLocaleString("es-ES") + suf;
+        if (p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+      window.setTimeout(function () { renderFinal(el); }, dur + 400);
+    };
+
+    if (!("IntersectionObserver" in window)) { counters.forEach(start); return; }
+
+    var cio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { start(e.target); cio.unobserve(e.target); }
+      });
+    }, { threshold: 0.4 });
+    counters.forEach(function (el) { cio.observe(el); });
+
+    window.setTimeout(function () {
+      counters.forEach(function (el) { if (inView(el, 0.9)) start(el); });
+    }, 1200);
+  }
+
+  function setupScroll() {
+    var bar = document.getElementById("bar");
+    var lines = Array.prototype.slice.call(document.querySelectorAll(".tl"));
+    var ticking = false;
+
+    function update() {
+      var y = window.scrollY || window.pageYOffset || 0;
+      var h = document.documentElement.scrollHeight - window.innerHeight;
+      if (bar) bar.style.width = (h > 0 ? Math.min(y / h, 1) * 100 : 0) + "%";
+
+      lines.forEach(function (tl) {
+        var line = tl.querySelector(".tl-progress");
+        if (!line) return;
+        var r = tl.getBoundingClientRect();
+        var visible = Math.min(Math.max(window.innerHeight * 0.62 - r.top, 0), r.height);
+        line.style.height = visible + "px";
+      });
+      ticking = false;
+    }
+
+    window.addEventListener("scroll", function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    window.addEventListener("resize", update);
+    update();
+  }
+
+  // créditos de las fotos
+  function setupCredits() {
+    var data = [
+      ["Alan Turing (escultura)", "DeFacto", "CC BY-SA 4.0", "https://commons.wikimedia.org/wiki/File:Alan_Turing_by_Stephen_Kettle_2007.jpg"],
+      ["John McCarthy", "null0", "CC BY 2.0", "https://commons.wikimedia.org/wiki/File:John_McCarthy_(computer_scientist)_Stanford_2006_(272020300).jpg"],
+      ["Mark I Perceptron", "National Museum of the U.S. Navy", "dominio público", "https://commons.wikimedia.org/wiki/File:330-PSA-80-60_(USN_710739)_(20897323365).jpg"],
+      ["ELIZA", "desconocido", "dominio público", "https://commons.wikimedia.org/wiki/File:ELIZA_conversation.png"],
+      ["Deep Blue", "Anton Chiang", "CC BY 2.0", "https://commons.wikimedia.org/wiki/File:IBM_Deep_Blue_at_Computer_History_Museum_(9361685537).jpg"],
+      ["AlphaGo, jugada 37", "Axd", "CC BY-SA 4.0", "https://commons.wikimedia.org/wiki/File:Lee-sedol-alphago-divine-move.jpg"],
+      ["Geoffrey Hinton", "Jennifer 8. Lee", "CC BY-SA 4.0", "https://commons.wikimedia.org/wiki/File:Geoffrey_Hinton_at_2024_Nobel_Prize_Conference_7.jpg"],
+      ["ChatGPT (interfaz)", "StereoFolic", "CC BY-SA 4.0", "https://commons.wikimedia.org/wiki/File:GPT-5_Reasoning_UI.png"],
+      ["Frontier (Oak Ridge)", "Oak Ridge National Laboratory", "CC BY 2.0", "https://commons.wikimedia.org/wiki/File:Frontier_supercomputer_(10).jpg"],
+      ["Robot humanoide", "RuinDig / Yuki Uchida", "CC BY 4.0", "https://commons.wikimedia.org/wiki/File:Japan-Mobility-Show-2025-RuinDig_0542.jpg"]
+    ];
+
+    var ul = document.getElementById("creditos");
+    if (!ul) return;
+    data.forEach(function (row) {
+      var li = document.createElement("li");
+      li.innerHTML = "<b>" + row[0] + "</b> — " + row[1] + ", " + row[2] +
+        ' · <a href="' + row[3] + '" target="_blank" rel="noopener">ver original</a>';
+      ul.appendChild(li);
+    });
+  }
+
+  try { setupReveals(); } catch (e) { showAll(); }
+  try { if (/[?&]anim=off/.test(location.search)) showAll(); } catch (e) {}
+  try { setupCounters(); } catch (e) { counters.forEach(renderFinal); }
+  try { setupScroll(); } catch (e) {}
+  try { setupCredits(); } catch (e) {}
+})();
+</script>
+
+</body>
+</html>
