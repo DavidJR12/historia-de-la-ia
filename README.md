@@ -44,3 +44,7 @@ En un minuto estarán los cambios publicados.
 
 Los hechos históricos están fechados y contrastados. La sección final (lo que viene) es
 prospectiva: tendencias y debate, no anuncios.
+
+La web es de circulación privada: incluye `robots.txt` y etiquetas `noindex` para que los
+buscadores no la listen. No es una barrera de acceso: cualquiera que tenga el enlace puede
+verla.
